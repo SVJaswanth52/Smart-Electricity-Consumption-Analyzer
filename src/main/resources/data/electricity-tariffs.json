@@ -1,0 +1,278 @@
+[
+  {
+    "state": "Telangana",
+    "tariffPeriod": "FY2026-27",
+    "category": "DOMESTIC",
+    "calculationMethod": "TELANGANA_CATEGORY_THEN_SLABS",
+    "billingCycle": "MONTHLY",
+    "verificationStatus": "NEEDS_OFFICIAL_VERIFICATION",
+    "sourceDocument": "South India: Household Electricity Tariffs FY2026-27 supplied by user",
+    "notes": "The applicable category changes with total monthly use. Above 200 units, the higher-consumption schedule applies to all units.",
+    "slabs": [
+      {
+        "minUnits": 0,
+        "maxUnits": 50,
+        "rate": 1.95,
+        "categoryCondition": "TOTAL_UP_TO_100"
+      },
+      {
+        "minUnits": 50,
+        "maxUnits": 100,
+        "rate": 3.1,
+        "categoryCondition": "TOTAL_UP_TO_100"
+      },
+      {
+        "minUnits": 0,
+        "maxUnits": 100,
+        "rate": 3.4,
+        "categoryCondition": "TOTAL_101_TO_200"
+      },
+      {
+        "minUnits": 100,
+        "maxUnits": 200,
+        "rate": 4.8,
+        "categoryCondition": "TOTAL_101_TO_200"
+      },
+      {
+        "minUnits": 0,
+        "maxUnits": 200,
+        "rate": 5.1,
+        "categoryCondition": "TOTAL_ABOVE_200"
+      },
+      {
+        "minUnits": 200,
+        "maxUnits": 300,
+        "rate": 7.7,
+        "categoryCondition": "TOTAL_ABOVE_200"
+      },
+      {
+        "minUnits": 300,
+        "maxUnits": 400,
+        "rate": 9.0,
+        "categoryCondition": "TOTAL_ABOVE_200"
+      },
+      {
+        "minUnits": 400,
+        "maxUnits": 800,
+        "rate": 9.5,
+        "categoryCondition": "TOTAL_ABOVE_200"
+      },
+      {
+        "minUnits": 800,
+        "maxUnits": null,
+        "rate": 10.0,
+        "categoryCondition": "TOTAL_ABOVE_200"
+      }
+    ],
+    "additionalCharges": {
+      "fixedCharge": null,
+      "electricityDuty": null,
+      "subsidy": null,
+      "otherAdjustments": null,
+      "status": "NOT_INCLUDED_UNLESS_VERIFIED"
+    }
+  },
+  {
+    "state": "Andhra Pradesh",
+    "tariffPeriod": "FY2026-27",
+    "category": "DOMESTIC",
+    "calculationMethod": "TELESCOPIC",
+    "billingCycle": "MONTHLY",
+    "verificationStatus": "NEEDS_OFFICIAL_VERIFICATION",
+    "sourceDocument": "South India: Household Electricity Tariffs FY2026-27 supplied by user",
+    "notes": "Telescopic domestic slabs.",
+    "slabs": [
+      {
+        "minUnits": 0,
+        "maxUnits": 30,
+        "rate": 1.9
+      },
+      {
+        "minUnits": 30,
+        "maxUnits": 75,
+        "rate": 3.0
+      },
+      {
+        "minUnits": 75,
+        "maxUnits": 125,
+        "rate": 4.5
+      },
+      {
+        "minUnits": 125,
+        "maxUnits": 225,
+        "rate": 6.0
+      },
+      {
+        "minUnits": 225,
+        "maxUnits": 400,
+        "rate": 8.75
+      },
+      {
+        "minUnits": 400,
+        "maxUnits": null,
+        "rate": 9.75
+      }
+    ],
+    "additionalCharges": {
+      "fixedCharge": null,
+      "electricityDuty": null,
+      "subsidy": null,
+      "otherAdjustments": null,
+      "status": "NOT_INCLUDED_UNLESS_VERIFIED"
+    }
+  },
+  {
+    "state": "Karnataka",
+    "tariffPeriod": "FY2026-27",
+    "category": "DOMESTIC",
+    "calculationMethod": "FLAT_RATE",
+    "billingCycle": "MONTHLY",
+    "verificationStatus": "NEEDS_OFFICIAL_VERIFICATION",
+    "sourceDocument": "South India: Household Electricity Tariffs FY2026-27 supplied by user",
+    "notes": "Domestic LT-1 flat energy rate. Fixed charges and eligible household subsidy are not included.",
+    "slabs": [],
+    "additionalCharges": {
+      "fixedCharge": null,
+      "electricityDuty": null,
+      "subsidy": null,
+      "otherAdjustments": null,
+      "status": "NOT_INCLUDED_UNLESS_VERIFIED"
+    },
+    "flatRate": 5.8
+  },
+  {
+    "state": "Kerala",
+    "tariffPeriod": "FY2026-27",
+    "category": "DOMESTIC",
+    "calculationMethod": "TELESCOPIC_UP_TO_250_THEN_WHOLE_BAND",
+    "billingCycle": "MONTHLY",
+    "verificationStatus": "NEEDS_OFFICIAL_VERIFICATION",
+    "sourceDocument": "South India: Household Electricity Tariffs FY2026-27 supplied by user",
+    "notes": "Telescopic tariff up to 250 units. Above 250, supplied guide lists non-telescopic whole-consumption bands. Band boundaries are preserved from the supplied guide and need confirmation against the applicable official order.",
+    "slabs": [
+      {
+        "minUnits": 0,
+        "maxUnits": 50,
+        "rate": 3.35,
+        "categoryCondition": "TOTAL_UP_TO_250"
+      },
+      {
+        "minUnits": 50,
+        "maxUnits": 100,
+        "rate": 4.25,
+        "categoryCondition": "TOTAL_UP_TO_250"
+      },
+      {
+        "minUnits": 100,
+        "maxUnits": 150,
+        "rate": 5.35,
+        "categoryCondition": "TOTAL_UP_TO_250"
+      },
+      {
+        "minUnits": 150,
+        "maxUnits": 200,
+        "rate": 7.2,
+        "categoryCondition": "TOTAL_UP_TO_250"
+      },
+      {
+        "minUnits": 200,
+        "maxUnits": 250,
+        "rate": 8.5,
+        "categoryCondition": "TOTAL_UP_TO_250"
+      }
+    ],
+    "additionalCharges": {
+      "fixedCharge": null,
+      "electricityDuty": null,
+      "subsidy": null,
+      "otherAdjustments": null,
+      "status": "NOT_INCLUDED_UNLESS_VERIFIED"
+    },
+    "wholeConsumptionBands": [
+      {
+        "minTotalUnits": 250,
+        "maxTotalUnits": 300,
+        "rate": 6.85
+      },
+      {
+        "minTotalUnits": 300,
+        "maxTotalUnits": 350,
+        "rate": 7.85
+      },
+      {
+        "minTotalUnits": 350,
+        "maxTotalUnits": 400,
+        "rate": 7.85
+      },
+      {
+        "minTotalUnits": 400,
+        "maxTotalUnits": 500,
+        "rate": 7.85
+      },
+      {
+        "minTotalUnits": 500,
+        "maxTotalUnits": null,
+        "rate": 8.95
+      }
+    ]
+  },
+  {
+    "state": "Tamil Nadu",
+    "tariffPeriod": "FY2026-27",
+    "category": "DOMESTIC",
+    "calculationMethod": "BIMONTHLY_TELESCOPIC_ESTIMATE",
+    "billingCycle": "BIMONTHLY",
+    "verificationStatus": "NEEDS_OFFICIAL_VERIFICATION",
+    "sourceDocument": "South India: Household Electricity Tariffs FY2026-27 supplied by user",
+    "notes": "Input usage is monthly average; calculator doubles units to estimate the bimonthly billing band. First 100 units per bimonthly period are treated as free per supplied guide. Published schedule and subsidy must be confirmed on the actual bill.",
+    "slabs": [
+      {
+        "minUnits": 0,
+        "maxUnits": 100,
+        "rate": 0.0
+      },
+      {
+        "minUnits": 100,
+        "maxUnits": 200,
+        "rate": 4.8
+      },
+      {
+        "minUnits": 200,
+        "maxUnits": 400,
+        "rate": 4.8
+      },
+      {
+        "minUnits": 400,
+        "maxUnits": 500,
+        "rate": 6.45
+      },
+      {
+        "minUnits": 500,
+        "maxUnits": 600,
+        "rate": 8.55
+      },
+      {
+        "minUnits": 600,
+        "maxUnits": 800,
+        "rate": 9.65
+      },
+      {
+        "minUnits": 800,
+        "maxUnits": 1000,
+        "rate": 10.7
+      },
+      {
+        "minUnits": 1000,
+        "maxUnits": null,
+        "rate": 11.8
+      }
+    ],
+    "additionalCharges": {
+      "fixedCharge": null,
+      "electricityDuty": null,
+      "subsidy": null,
+      "otherAdjustments": null,
+      "status": "NOT_INCLUDED_UNLESS_VERIFIED"
+    }
+  }
+]

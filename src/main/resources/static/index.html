@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Electricity Analyzer</title>
+  <style>
+    :root {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #182333;
+      background: #f3f6fa;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+
+    header {
+      background: #123b53;
+      color: white;
+      padding: 26px max(22px, calc((100% - 1120px) / 2));
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(23px, 4vw, 34px);
+    }
+
+    header p { margin: 0; color: #d6e5ed; }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 24px auto;
+      padding: 0 18px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e0e7ee;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 5px 18px #1b35420a;
+    }
+
+    .card h2 { font-size: 18px; margin: 0 0 16px; }
+    .field { margin: 0 0 14px; }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #435467;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5df;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: #087e8b;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn:hover { background: #066975; }
+    .btn.secondary { background: #e8f3f5; color: #086a76; }
+    .btn.danger { background: #eef1f4; color: #465466; padding: 7px 9px; }
+    .btn.danger:hover { background: #dfe5eb; color: #263445; }
+
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .muted { font-size: 12px; color: #718093; line-height: 1.5; }
+
+    .usage-row {
+      display: grid;
+      grid-template-columns: 1fr 105px;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #edf0f4;
+    }
+
+    .usage-row:last-child { border-bottom: 0; }
+
+    .usage-row input {
+      width: 100%;
+      padding: 9px;
+      border: 1px solid #cbd5df;
+      border-radius: 8px;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      padding: 16px;
+      border-radius: 12px;
+      background: #f0f7f8;
+    }
+
+    .metric span {
+      display: block;
+      font-size: 12px;
+      color: #617184;
+      margin-bottom: 8px;
+    }
+
+    .metric strong { font-size: 23px; overflow-wrap: anywhere; }
+
+    .status {
+      padding: 12px;
+      border-radius: 9px;
+      margin: 12px 0;
+      font-weight: bold;
+    }
+
+    .good { background: #e9f7ee; color: #176238; }
+    .bad { background: #fff0ed; color: #a52e26; }
+
+    .table-wrap { overflow: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #edf0f4; }
+    th { color: #5b6c7d; }
+
+    .suggestion {
+      border-left: 3px solid #087e8b;
+      background: #f5fafb;
+      padding: 12px;
+      margin: 9px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .warning {
+      background: #fff8e7;
+      border: 1px solid #f0dfaa;
+      border-radius: 9px;
+      padding: 12px;
+      margin: 9px 0;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .hidden { display: none; }
+    .section-gap { margin-top: 16px; }
+
+    .bar {
+      height: 7px;
+      background: #e8edf2;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .bar span { display: block; height: 100%; background: #087e8b; }
+
+    .message {
+      padding: 10px 12px;
+      background: #edf5fb;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 13px;
+    }
+
+    .small-title { font-size: 13px; font-weight: bold; margin: 16px 0 8px; }
+
+    @media (max-width: 820px) {
+      .layout { grid-template-columns: 1fr; }
+      .results { grid-template-columns: 1fr 1fr; }
+      .results .metric:last-child { grid-column: span 2; }
+    }
+
+    @media (max-width: 450px) {
+      .results { grid-template-columns: 1fr; }
+      .results .metric:last-child { grid-column: auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Smart Electricity Consumption Analyzer</h1>
+    <p>Estimate household energy use, compare it with your budget, and find practical ways to save.</p>
+  </header>
+
+  <div class="wrap">
+    <div class="layout">
+      <aside>
+        <section class="card">
+          <h2>1. Monthly details</h2>
+
+          <div class="field">
+            <label for="state">State / tariff region</label>
+            <select id="state">
+              <option>Loading states...</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="month">Month</label>
+            <select id="month">
+              <option>January</option>
+              <option>February</option>
+              <option>March</option>
+              <option>April</option>
+              <option>May</option>
+              <option>June</option>
+              <option>July</option>
+              <option>August</option>
+              <option>September</option>
+              <option>October</option>
+              <option>November</option>
+              <option>December</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="budget">Comfortable monthly budget (₹)</label>
+            <input id="budget" type="number" min="1" value="2000">
+          </div>
+
+          <button class="btn" style="width: 100%;" id="analyze">Analyze consumption</button>
+
+          <div class="muted" style="margin-top: 10px;">
+            The state tariff is selected automatically. The estimate may exclude fixed charges, duties, subsidies, or other bill adjustments that have not been verified.
+          </div>
+          <div id="formMessage" class="message hidden"></div>
+        </section>
+
+        <section class="card section-gap">
+          <h2>2. Your appliances</h2>
+
+          <div class="field">
+            <label for="newName">Appliance name</label>
+            <input id="newName" placeholder="e.g. Washing machine">
+          </div>
+
+          <div class="field">
+            <label for="newWatts">Power in watts (W)</label>
+            <input id="newWatts" type="number" min="1" placeholder="e.g. 500">
+          </div>
+
+          <button class="btn secondary" id="addAppliance">Add appliance</button>
+          <p class="muted">Check the appliance label or manual for its wattage. Existing appliances are loaded from MongoDB.</p>
+          <div id="applianceList"></div>
+        </section>
+      </aside>
+
+      <main>
+        <section class="card">
+          <h2>Estimated monthly overview</h2>
+          <div id="empty" class="muted">Enter daily usage for your appliances, then select Analyze consumption.</div>
+
+          <div id="analysis" class="hidden">
+            <div class="results">
+              <div class="metric">
+                <span>Total consumption</span>
+                <strong id="totalUnits">0 kWh</strong>
+              </div>
+              <div class="metric">
+                <span id="costLabel">Estimated energy charges</span>
+                <strong id="totalCost">₹0</strong>
+              </div>
+              <div class="metric">
+                <span>Your budget</span>
+                <strong id="budgetMetric">₹0</strong>
+              </div>
+            </div>
+
+            <div id="budgetStatus" class="status"></div>
+            <div class="muted" id="tariffInfo"></div>
+
+            <div class="small-title">Estimated bill breakdown</div>
+            <div id="billBreakdown"></div>
+
+            <div class="small-title">Appliance breakdown</div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Appliance</th>
+                    <th>Daily hours</th>
+                    <th>Monthly kWh</th>
+                    <th>Est. energy charge share</th>
+                  </tr>
+                </thead>
+                <tbody id="breakdown"></tbody>
+              </table>
+            </div>
+
+            <div class="small-title">Saving suggestions</div>
+            <div id="suggestions"></div>
+
+            <div class="small-title">Tariff notes</div>
+            <div id="warnings"></div>
+          </div>
+        </section>
+
+        <section class="card section-gap">
+          <h2>Daily usage (hours)</h2>
+          <p class="muted">Enter your average usage on a normal day. The calculation uses the selected month's number of days and each appliance's wattage.</p>
+          <div id="usageInputs">
+            <div class="muted">Loading appliances...</div>
+          </div>
+        </section>
+
+        <section class="card section-gap">
+          <h2>How the calculation works</h2>
+          <p class="muted"><b>Monthly consumption (kWh)</b> = appliance watts × daily usage hours × days in month ÷ 1000.</p>
+          <p class="muted">The displayed amount is an energy-charge estimate using the supplied tariff data. Unknown fixed charges, duties, subsidies, and other adjustments are shown as unavailable, not treated as zero. Tamil Nadu uses a two-month tariff estimate, with a monthly-equivalent amount used for the monthly budget comparison.</p>
+        </section>
+      </main>
+    </div>
+
+    <p class="muted" style="text-align: center; margin: 24px 0;">
+      Student project estimate · Tariffs supplied for FY 2026–27 · Verify with your distribution company before relying on a bill amount.
+    </p>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    let appliances = [];
+
+    function money(value) {
+      return '₹' + Number(value || 0).toLocaleString('en-IN', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      });
+    }
+
+    function msg(text, show = true) {
+      $('formMessage').textContent = text;
+      $('formMessage').classList.toggle('hidden', !show);
+    }
+
+    async function api(url, options = {}) {
+      const response = await fetch(url, {
+        headers: { 'Content-Type': 'application/json' },
+        ...options
+      });
+
+      const data = await response.json().catch(() => ({
+        message: 'Unexpected server response'
+      }));
+
+      if (!response.ok || data.success === false) {
+        throw new Error(data.message || 'Request failed');
+      }
+
+      return data;
+    }
+
+    async function load() {
+      try {
+        const states = await api('/api/states');
+        $('state').innerHTML = states.map(state =>
+          `<option>${esc(state)}</option>`
+        ).join('');
+
+        appliances = await api('/api/appliances');
+        renderAppliances();
+        renderUsage();
+      } catch (error) {
+        msg('Could not connect to the backend. Start MongoDB and run the Spring Boot application. ' + error.message);
+      }
+    }
+
+    function renderAppliances() {
+      $('applianceList').innerHTML = appliances.map(appliance => `
+        <div class="usage-row">
+          <div>
+            <b>${esc(appliance.name)}</b>
+            <div class="muted">${appliance.powerWatts} W</div>
+          </div>
+          <button class="btn danger" data-remove="${esc(appliance.name)}" type="button">
+            Remove
+          </button>
+        </div>
+      `).join('') || '<p class="muted">No appliances added yet.</p>';
+
+      $('applianceList').querySelectorAll('[data-remove]').forEach(button => {
+        button.addEventListener('click', () => removeAppliance(button.dataset.remove));
+      });
+    }
+
+    function renderUsage() {
+      const previousValues = {};
+
+      document.querySelectorAll('[data-usage]').forEach(input => {
+        previousValues[input.dataset.usage] = input.value;
+      });
+
+      $('usageInputs').innerHTML = appliances.map(appliance => `
+        <div class="usage-row">
+          <div>
+            <b>${esc(appliance.name)}</b>
+            <div class="muted">${appliance.powerWatts} W</div>
+          </div>
+          <div>
+            <input
+              aria-label="Daily hours for ${esc(appliance.name)}"
+              data-usage="${esc(appliance.name)}"
+              type="number"
+              min="0"
+              max="24"
+              step="0.25"
+              value="${previousValues[appliance.name] ?? '1'}"
+            >
+            <div class="muted">hours/day</div>
+          </div>
+        </div>
+      `).join('') || '<p class="muted">Add an appliance to enter its daily usage.</p>';
+    }
+
+    function esc(value) {
+      return String(value).replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[character]));
+    }
+
+    $('addAppliance').onclick = async () => {
+      const name = $('newName').value.trim();
+      const powerWatts = Number($('newWatts').value);
+
+      if (!name || !Number.isFinite(powerWatts) || powerWatts <= 0) {
+        msg('Enter an appliance name and wattage greater than zero.');
+        return;
+      }
+
+      try {
+        await api('/api/appliances', {
+          method: 'POST',
+          body: JSON.stringify({ name, powerWatts })
+        });
+
+        $('newName').value = '';
+        $('newWatts').value = '';
+        appliances = await api('/api/appliances');
+        renderAppliances();
+        renderUsage();
+        msg('Appliance added.');
+      } catch (error) {
+        msg(error.message);
+      }
+    };
+
+    async function removeAppliance(name) {
+      try {
+        await api('/api/appliances/' + encodeURIComponent(name), { method: 'DELETE' });
+        appliances = await api('/api/appliances');
+        renderAppliances();
+        renderUsage();
+        msg('Appliance removed.');
+      } catch (error) {
+        msg(error.message);
+      }
+    }
+
+    $('analyze').onclick = async () => {
+      if (!appliances.length) {
+        msg('Add at least one appliance first.');
+        return;
+      }
+
+      const usages = Array.from(document.querySelectorAll('[data-usage]')).map(input => ({
+        applianceName: input.dataset.usage,
+        dailyUsageHours: Number(input.value)
+      }));
+
+      if (usages.some(usage =>
+        !Number.isFinite(usage.dailyUsageHours) ||
+        usage.dailyUsageHours < 0 ||
+        usage.dailyUsageHours > 24
+      )) {
+        msg('Daily usage must be between 0 and 24 hours.');
+        return;
+      }
+
+      const monthlyBudget = Number($('budget').value);
+
+      if (!Number.isFinite(monthlyBudget) || monthlyBudget <= 0) {
+        msg('Enter a budget greater than zero.');
+        return;
+      }
+
+      try {
+        const data = await api('/api/analyze', {
+          method: 'POST',
+          body: JSON.stringify({
+            state: $('state').value,
+            month: $('month').value,
+            monthlyBudget,
+            usages
+          })
+        });
+
+        showResult(data);
+        msg('Analysis complete.');
+      } catch (error) {
+        msg(error.message);
+      }
+    };
+
+    function showResult(data) {
+      $('empty').classList.add('hidden');
+      $('analysis').classList.remove('hidden');
+
+      const energyCharge = Number(data.energyCharge ?? data.totalCost ?? 0);
+      const estimatedAmount = Number(data.budgetComparisonAmount ?? data.totalCost ?? energyCharge);
+      const budget = Number(data.monthlyBudget ?? $('budget').value);
+      const difference = budget - estimatedAmount;
+
+      $('costLabel').textContent = data.budgetComparisonLabel || 'Estimated energy charges';
+      $('totalUnits').textContent = Number(data.totalConsumption || 0).toFixed(2) + ' kWh';
+      $('totalCost').textContent = money(estimatedAmount);
+      $('budgetMetric').textContent = money(budget);
+
+      const status = $('budgetStatus');
+      status.className = 'status ' + (estimatedAmount > budget ? 'bad' : 'good');
+      const comparisonLabel = data.budgetComparisonLabel || 'Estimated energy charges';
+      status.textContent = estimatedAmount > budget
+        ? `${comparisonLabel} exceed your monthly budget by ${money(estimatedAmount - budget)}.`
+        : `${comparisonLabel} are ${money(difference)} under your monthly budget. Other bill components may apply.`;
+
+      $('tariffInfo').textContent =
+        `${data.state} · ${data.month} · ${data.daysInMonth} days · ` +
+        `${data.billingCycle} billing · ` +
+        `${String(data.tariffVerificationStatus || 'NEEDS_VERIFICATION').replaceAll('_', ' ').toLowerCase()}.`;
+
+      const fixedCharge = data.fixedCharge;
+      const duty = data.electricityDuty;
+      const adjustments = data.otherAdjustments;
+      const subsidy = data.subsidy;
+
+      const breakdownItems = [
+        [data.billingCycle === 'BIMONTHLY' ? 'Estimated energy charges (two-month period)' : 'Energy charges', energyCharge, true],
+        ['Fixed charges', fixedCharge, fixedCharge != null],
+        ['Electricity duty', duty, duty != null],
+        ['Other adjustments', adjustments, adjustments != null],
+        ['Subsidy / credits', subsidy, subsidy != null]
+      ];
+
+      $('billBreakdown').innerHTML = breakdownItems.map(([label, value, available]) => `
+        <div class="warning">
+          <b>${esc(label)}:</b>
+          ${available ? money(value) : 'Not included (verified value unavailable)'}
+        </div>
+      `).join('') + `
+        <div class="suggestion">
+          <b>${data.billingCycle === 'BIMONTHLY' ? 'Estimated energy charges for two months' : 'Estimated known energy-charge amount'}: ${money(energyCharge)}</b>
+          <div class="muted">${data.billingCycle === 'BIMONTHLY' ? 'Monthly equivalent for budget comparison: ' + money(estimatedAmount) + '.' : 'This is not a confirmed final bill.'} Fixed charges, duties, subsidies, and other adjustments may change the payable amount.</div>
+        </div>
+      `;
+
+      $('breakdown').innerHTML = (data.appliances || []).map(appliance => `
+        <tr>
+          <td>
+            ${esc(appliance.name)}
+            <div class="bar">
+              <span style="width: ${
+                data.totalConsumption
+                  ? Math.min(100, appliance.monthlyConsumption / data.totalConsumption * 100)
+                  : 0
+              }%"></span>
+            </div>
+          </td>
+          <td>${appliance.dailyUsageHours}</td>
+          <td>${Number(appliance.monthlyConsumption || 0).toFixed(2)}</td>
+          <td>${money(appliance.estimatedEnergyChargeShare)}</td>
+        </tr>
+      `).join('');
+
+      $('suggestions').innerHTML = (data.suggestions || []).map(suggestion => `
+        <div class="suggestion">
+          <b>${esc(suggestion.title)}</b>
+          <div class="muted">${esc(suggestion.detail)}</div>
+        </div>
+      `).join('');
+
+      const notes = [
+        data.tariffNotes,
+        ...(data.warnings || [])
+      ].filter(Boolean);
+
+      $('warnings').innerHTML = notes.map(warning =>
+        `<div class="warning">${esc(warning)}</div>`
+      ).join('');
+    }
+
+    load();
+  </script>
+</body>
+</html>
